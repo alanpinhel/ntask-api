@@ -4,7 +4,8 @@
   "description": "API de gestão de tarefas",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node index.js"
+    "start": "babel-node index.js",
+    "test": "NODE_ENV=test mocha test/**/*.js"
   },
   "author": "Alan Pinhel",
   "dependencies": {
@@ -18,5 +19,11 @@
     "mongoose": "^4.6.6",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.0"
+  },
+  "devDependencies": {
+    "babel-register": "^6.18.0",
+    "chai": "^3.5.0",
+    "mocha": "^3.1.2",
+    "supertest": "^2.0.1"
   }
 }

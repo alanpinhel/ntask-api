@@ -21,13 +21,13 @@ module.exports = app => {
 				.then(usuario => {
 					let tarefa = {
 						titulo: req.body.titulo,
-						feito: req.body.feito
+						feito: req.body.feito || false
 					};
 					let tarefas = usuario.tarefas;
 					
 					tarefas.push(tarefa);
 					usuario.save(() => {
-						res.json(tarefas);
+						res.json(tarefa);
 					});
 				})
 				.catch(err => {
