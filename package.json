@@ -4,8 +4,15 @@
   "description": "API de gestão de tarefas",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node index.js",
+    "start": "npm run apidoc && babel-node index.js",
+    "apidoc": "apidoc -i routes/ -o public/apidoc",
     "test": "NODE_ENV=test mocha test/**/*.js"
+  },
+  "apidoc": {
+    "name": "Documentação - Node Task API",
+    "template": {
+      "forceLanguage": "pt_br"
+    }
   },
   "author": "Alan Pinhel",
   "dependencies": {
@@ -21,6 +28,7 @@
     "passport-jwt": "^2.2.0"
   },
   "devDependencies": {
+    "apidoc": "^0.16.1",
     "babel-register": "^6.18.0",
     "chai": "^3.5.0",
     "mocha": "^3.1.2",
