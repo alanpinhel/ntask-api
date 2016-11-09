@@ -1,5 +1,4 @@
 import bodyParser from "body-parser";
-import express from "express";
 
 module.exports = app => {
 	app.set("porta", process.env.PORT);
@@ -10,5 +9,4 @@ module.exports = app => {
 		delete req.body._id;
 		next();
 	});
-	app.use(express.static("public"));
 };

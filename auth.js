@@ -2,7 +2,7 @@ import passport from "passport";
 import {Strategy, ExtractJwt} from "passport-jwt";
 
 module.exports = app => {
-	const Usuario = app.models.usuario;
+	const Usuarios = app.models.usuarios;
 	const config = app.libs.config;
 	const params = {
 		secretOrKey: config.jwtSecret,
@@ -10,7 +10,7 @@ module.exports = app => {
 	};
 	
 	let strategy = new Strategy(params, (payload, done) => {
-		Usuario
+		Usuarios
 			.findById(payload._id)
 			.select("_id email")
 			.then(usuario => {
