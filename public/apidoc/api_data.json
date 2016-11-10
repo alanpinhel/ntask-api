@@ -66,36 +66,6 @@
     "name": "PostToken"
   },
   {
-    "type": "get",
-    "url": "/",
-    "title": "API Status",
-    "group": "Status",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Status da API</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Sucesso",
-          "content": "HTTP/1.1 200 OK\n{\"status\": \"online\"}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "routes/index.js",
-    "groupTitle": "Status",
-    "name": "Get"
-  },
-  {
     "type": "delete",
     "url": "/tarefas/:id",
     "title": "Excluí uma tarefa",
