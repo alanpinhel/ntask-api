@@ -4,9 +4,10 @@
   "description": "API de gestão de tarefas",
   "main": "index.js",
   "scripts": {
-    "start": "npm run apidoc && babel-node index.js",
-    "apidoc": "apidoc -i routes/ -o public/apidoc",
-    "test": "NODE_ENV=test mocha test/**/*.js"
+    "start": "npm run apidoc && npm run clusters",
+    "clusters": "babel-node clusters.js",
+    "test": "NODE_ENV=test mocha test/**/*.js",
+    "apidoc": "apidoc -i routes/ -o public/apidoc"
   },
   "apidoc": {
     "name": "Documentação - Node Task API",
@@ -20,13 +21,17 @@
     "babel-preset-es2015": "^6.18.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
+    "compression": "^1.6.2",
     "consign": "^0.1.2",
     "cors": "^2.8.1",
     "express": "^4.14.0",
+    "helmet": "^3.1.0",
     "jwt-simple": "^0.5.0",
     "mongoose": "^4.6.6",
+    "morgan": "^1.7.0",
     "passport": "^0.3.2",
-    "passport-jwt": "^2.2.0"
+    "passport-jwt": "^2.2.0",
+    "winston": "^2.3.0"
   },
   "devDependencies": {
     "apidoc": "^0.16.1",
