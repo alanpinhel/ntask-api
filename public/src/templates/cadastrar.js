@@ -2,6 +2,10 @@ exports.render = () => {
   return `<form>
     <div class="list">
       <label class="item item-input item-stacked-label">
+        <span class="input-label">Nome</span>
+        <input type="text" data-nome>
+      </label>
+      <label class="item item-input item-stacked-label">
         <span class="input-label">E-mail</span>
         <input type="text" data-email>
       </label>
@@ -12,13 +16,8 @@ exports.render = () => {
     </div>
     <div class="padding">
       <button class="button button-positive button-block">
-        <i class="ion-home"></i> Entrar
+        <i class="ion-thumbsup"></i> Cadastrar
       </button>
     </div>
-  </form>
-  <div class="padding">
-    <button class="button button-block" data-cadastrar>
-      <i class="ion-person-add"></i> Cadastrar
-    </button>
-  </div>`;
+  </form>`;
 };
