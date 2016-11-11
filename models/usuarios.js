@@ -26,8 +26,8 @@ module.exports = app => {
 	});
 
 	usuarios.post("validate", (usuario) => {
-		let salt = bcrypt.genSaltSync();
-		if (!usuario.tarefas.length) {
+		if (!usuario.criado) {
+			let salt = bcrypt.genSaltSync();
 			usuario.senha = bcrypt.hashSync(usuario.senha, salt);
 		}
 	});

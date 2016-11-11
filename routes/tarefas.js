@@ -70,7 +70,7 @@ module.exports = app => {
 		.post((req, res) => {
 			Usuarios
 				.findById(req.user._id)
-				.select("_id tarefas")
+				.select("_id tarefas criado")
 				.then(usuario => {
 					let tarefa = {
 						titulo: req.body.titulo,
@@ -158,7 +158,7 @@ module.exports = app => {
 		.put((req, res) => {
 			Usuarios
 				.findById(req.user._id)
-				.select("_id tarefas")
+				.select("_id tarefas criado")
 				.then(usuario => {
 					usuario.tarefas.id(req.params._id).feito = req.body.feito;
 					usuario.save(() => {
@@ -185,7 +185,7 @@ module.exports = app => {
 		.delete((req, res) => {
 			Usuarios
 				.findById(req.user._id)
-				.select("_id tarefas")
+				.select("_id tarefas criado")
 				.then(usuario => {
 					usuario.tarefas.id(req.params._id).remove();
 					usuario.save(() => {
