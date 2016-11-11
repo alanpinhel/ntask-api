@@ -26,7 +26,7 @@ module.exports = app => {
 		.get((req, res) => {
 			Usuarios
 				.findById(req.user._id)
-				.select("_id nome email")
+				.select("_id nome senha email")
 				.then(usuario => {
 					res.json(usuario);
 				})

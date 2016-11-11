@@ -27,7 +27,9 @@ module.exports = app => {
 
 	usuarios.post("validate", (usuario) => {
 		let salt = bcrypt.genSaltSync();
-		usuario.senha = bcrypt.hashSync(usuario.senha, salt);
+		if (!usuario.tarefas.length) {
+			usuario.senha = bcrypt.hashSync(usuario.senha, salt);
+		}
 	});
 
 	usuarios.methods.comparaSenha = (senhaCriptograda, senha) => {

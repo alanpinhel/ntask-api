@@ -567,6 +567,18 @@ module.exports = E;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _tarefas = require("./components/tarefas.js");
+
+var _tarefas2 = _interopRequireDefault(_tarefas);
+
+var _tarefaForm = require("./components/tarefaForm.js");
+
+var _tarefaForm2 = _interopRequireDefault(_tarefaForm);
+
+var _usuario = require("./components/usuario.js");
+
+var _usuario2 = _interopRequireDefault(_usuario);
+
 var _entrar = require("./components/entrar.js");
 
 var _entrar2 = _interopRequireDefault(_entrar);
@@ -575,16 +587,24 @@ var _cadastrar = require("./components/cadastrar.js");
 
 var _cadastrar2 = _interopRequireDefault(_cadastrar);
 
+var _menu = require("./components/menu.js");
+
+var _menu2 = _interopRequireDefault(_menu);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var App = function () {
-  function App(body) {
+  function App(body, footer) {
     _classCallCheck(this, App);
 
     this.entrar = new _entrar2.default(body);
     this.cadastrar = new _cadastrar2.default(body);
+    this.tarefas = new _tarefas2.default(body);
+    this.tarefaForm = new _tarefaForm2.default(body);
+    this.usuario = new _usuario2.default(body);
+    this.menu = new _menu2.default(footer);
   }
 
   _createClass(App, [{
@@ -598,6 +618,10 @@ var App = function () {
     value: function addEventListener() {
       this.entrarEvents();
       this.cadastrarEvents();
+      this.tarefasEvents();
+      this.tarefaFormEvents();
+      this.usuarioEvents();
+      this.menuEvents();
     }
   }, {
     key: "entrarEvents",
@@ -609,7 +633,8 @@ var App = function () {
       });
       this.entrar.on("entrar", function (token) {
         localStorage.setItem("token", "JWT " + token);
-        alert("Você está autenticado!");
+        _this.menu.render("tarefas");
+        _this.tarefas.render();
       });
       this.entrar.on("cadastrar", function () {
         _this.cadastrar.render();
@@ -628,6 +653,73 @@ var App = function () {
         _this2.entrar.render();
       });
     }
+  }, {
+    key: "tarefasEvents",
+    value: function tarefasEvents() {
+      var _this3 = this;
+
+      this.tarefas.on("error", function () {
+        alert("Erro ao listar tarefas");
+      });
+      this.tarefas.on("remove-error", function () {
+        alert("Erro ao excluir");
+      });
+      this.tarefas.on("update-error", function () {
+        alert("Erro ao atualizar");
+      });
+      this.tarefas.on("remove", function () {
+        _this3.tarefas.render();
+      });
+      this.tarefas.on("update", function () {
+        _this3.tarefas.render();
+      });
+    }
+  }, {
+    key: "tarefaFormEvents",
+    value: function tarefaFormEvents() {
+      var _this4 = this;
+
+      this.tarefaForm.on("error", function () {
+        alert("Erro ao cadastrar tarefa");
+      });
+      this.tarefaForm.on("submit", function () {
+        _this4.menu.render("tarefas");
+        _this4.tarefas.render();
+      });
+    }
+  }, {
+    key: "usuarioEvents",
+    value: function usuarioEvents() {
+      var _this5 = this;
+
+      this.usuario.on("error", function () {
+        alert("Erro carregar usuário");
+      });
+      this.usuario.on("remove-error", function () {
+        alert("Erro ao excluir conta");
+      });
+      this.usuario.on("remove-conta", function () {
+        alert("Que pena! Sua conta foi excluída.");
+        localStorage.clear();
+        _this5.menu.clear();
+        _this5.entrar.render();
+      });
+    }
+  }, {
+    key: "menuEvents",
+    value: function menuEvents() {
+      var _this6 = this;
+
+      this.menu.on("click", function (path) {
+        _this6.menu.render(path);
+        _this6[path].render();
+      });
+      this.menu.on("sair", function () {
+        localStorage.clear();
+        _this6.menu.clear();
+        _this6.entrar.render();
+      });
+    }
   }]);
 
   return App;
@@ -635,7 +727,7 @@ var App = function () {
 
 module.exports = App;
 
-},{"./components/cadastrar.js":4,"./components/entrar.js":5}],4:[function(require,module,exports){
+},{"./components/cadastrar.js":4,"./components/entrar.js":5,"./components/menu.js":6,"./components/tarefaForm.js":7,"./components/tarefas.js":8,"./components/usuario.js":9}],4:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -719,7 +811,7 @@ var Cadastrar = function (_NTask) {
 
 module.exports = Cadastrar;
 
-},{"../ntask.js":6,"../templates/cadastrar.js":7}],5:[function(require,module,exports){
+},{"../ntask.js":10,"../templates/cadastrar.js":11}],5:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -771,6 +863,7 @@ var Entrar = function (_NTask) {
       var _this2 = this;
 
       var form = this.body.querySelector("form");
+
       form.addEventListener("submit", function (e) {
         e.preventDefault();
 
@@ -785,6 +878,7 @@ var Entrar = function (_NTask) {
             senha: senha.value
           }
         };
+
         _this2.request(opcoes, function (err, res, data) {
           if (err || res.status === 401) {
             _this2.emit("error", err);
@@ -813,7 +907,411 @@ var Entrar = function (_NTask) {
 
 module.exports = Entrar;
 
-},{"../ntask.js":6,"../templates/entrar.js":8}],6:[function(require,module,exports){
+},{"../ntask.js":10,"../templates/entrar.js":12}],6:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _ntask = require("../ntask.js");
+
+var _ntask2 = _interopRequireDefault(_ntask);
+
+var _footer = require("../templates/footer.js");
+
+var _footer2 = _interopRequireDefault(_footer);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Menu = function (_NTask) {
+  _inherits(Menu, _NTask);
+
+  function Menu(body) {
+    _classCallCheck(this, Menu);
+
+    var _this = _possibleConstructorReturn(this, (Menu.__proto__ || Object.getPrototypeOf(Menu)).call(this));
+
+    _this.body = body;
+    return _this;
+  }
+
+  _createClass(Menu, [{
+    key: "render",
+    value: function render(path) {
+      this.body.innerHTML = _footer2.default.render(path);
+      this.addEventListener();
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      this.body.innerHTML = "";
+    }
+  }, {
+    key: "addEventListener",
+    value: function addEventListener() {
+      this.pathsClick();
+      this.logoutClick();
+    }
+  }, {
+    key: "pathsClick",
+    value: function pathsClick() {
+      var _this2 = this;
+
+      var links = this.body.querySelectorAll("[data-path]");
+
+      for (var i = 0, max = links.length; i < max; i++) {
+        links[i].addEventListener("click", function (e) {
+          e.preventDefault();
+          var link = e.target.parentElement;
+          var path = link.getAttribute("data-path");
+          _this2.emit("click", path);
+        });
+      }
+    }
+  }, {
+    key: "logoutClick",
+    value: function logoutClick() {
+      var _this3 = this;
+
+      var link = this.body.querySelector("[data-sair]");
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        _this3.emit("sair");
+      });
+    }
+  }]);
+
+  return Menu;
+}(_ntask2.default);
+
+module.exports = Menu;
+
+},{"../ntask.js":10,"../templates/footer.js":13}],7:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _ntask = require("../ntask.js");
+
+var _ntask2 = _interopRequireDefault(_ntask);
+
+var _tarefaForm = require("../templates/tarefaForm.js");
+
+var _tarefaForm2 = _interopRequireDefault(_tarefaForm);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TarefaForm = function (_NTask) {
+  _inherits(TarefaForm, _NTask);
+
+  function TarefaForm(body) {
+    _classCallCheck(this, TarefaForm);
+
+    var _this = _possibleConstructorReturn(this, (TarefaForm.__proto__ || Object.getPrototypeOf(TarefaForm)).call(this));
+
+    _this.body = body;
+    return _this;
+  }
+
+  _createClass(TarefaForm, [{
+    key: "render",
+    value: function render() {
+      this.body.innerHTML = _tarefaForm2.default.render();
+      this.body.querySelector("[data-tarefa]").focus();
+      this.addEventListener();
+    }
+  }, {
+    key: "addEventListener",
+    value: function addEventListener() {
+      this.formSubmit();
+    }
+  }, {
+    key: "formSubmit",
+    value: function formSubmit() {
+      var _this2 = this;
+
+      var form = this.body.querySelector("form");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var tarefa = e.target.querySelector("[data-tarefa]");
+        var opcoes = {
+          method: "POST",
+          url: _this2.URL + "/tarefas",
+          json: true,
+          headers: {
+            authorization: localStorage.getItem("token")
+          },
+          body: {
+            titulo: tarefa.value
+          }
+        };
+        _this2.request(opcoes, function (err, res, data) {
+          if (err || res.status === 412) {
+            _this2.emit("error");
+          } else {
+            _this2.emit("submit");
+          }
+        });
+      });
+    }
+  }]);
+
+  return TarefaForm;
+}(_ntask2.default);
+
+module.exports = TarefaForm;
+
+},{"../ntask.js":10,"../templates/tarefaForm.js":14}],8:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _ntask = require("../ntask.js");
+
+var _ntask2 = _interopRequireDefault(_ntask);
+
+var _tarefas = require("../templates/tarefas.js");
+
+var _tarefas2 = _interopRequireDefault(_tarefas);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Tarefas = function (_NTask) {
+  _inherits(Tarefas, _NTask);
+
+  function Tarefas(body) {
+    _classCallCheck(this, Tarefas);
+
+    var _this = _possibleConstructorReturn(this, (Tarefas.__proto__ || Object.getPrototypeOf(Tarefas)).call(this));
+
+    _this.body = body;
+    return _this;
+  }
+
+  _createClass(Tarefas, [{
+    key: "render",
+    value: function render() {
+      this.renderTarefaList();
+    }
+  }, {
+    key: "addEventListener",
+    value: function addEventListener() {
+      this.tarefaFeitoCheckbox();
+      this.tarefaRemoveClick();
+    }
+  }, {
+    key: "renderTarefaList",
+    value: function renderTarefaList() {
+      var _this2 = this;
+
+      var opcoes = {
+        method: "GET",
+        url: this.URL + "/tarefas",
+        json: true,
+        headers: {
+          authorization: localStorage.getItem("token")
+        }
+      };
+
+      this.request(opcoes, function (err, res, data) {
+        if (err) {
+          _this2.emit("error", err);
+        } else {
+          _this2.body.innerHTML = _tarefas2.default.render(data);
+          _this2.addEventListener();
+        }
+      });
+    }
+  }, {
+    key: "tarefaFeitoCheckbox",
+    value: function tarefaFeitoCheckbox() {
+      var _this3 = this;
+
+      var feitos = this.body.querySelectorAll("[data-feito]");
+
+      for (var i = 0, max = feitos.length; i < max; i++) {
+        feitos[i].addEventListener("click", function (e) {
+          e.preventDefault();
+
+          var _id = e.target.getAttribute("data-tarefa-_id");
+          var feito = e.target.getAttribute("data-tarefa-feito");
+          var opcoes = {
+            method: "PUT",
+            url: _this3.URL + "/tarefas/" + _id,
+            headers: {
+              authorization: localStorage.getItem("token"),
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              feito: !feito
+            })
+          };
+          _this3.request(opcoes, function (err, res, data) {
+            if (err || res.status === 412) {
+              _this3.emit("update-error", err);
+            } else {
+              _this3.emit("update");
+            }
+          });
+        });
+      }
+    }
+  }, {
+    key: "tarefaRemoveClick",
+    value: function tarefaRemoveClick() {
+      var _this4 = this;
+
+      var remover = this.body.querySelectorAll("[data-remove]");
+
+      for (var i = 0, max = remover.length; i < max; i++) {
+        remover[i].addEventListener("click", function (e) {
+          e.preventDefault();
+          if (confirm("Deseja excluir está tarefa?")) {
+            var _id = e.target.getAttribute("data-tarefa-_id");
+            var opcoes = {
+              method: "DELETE",
+              url: _this4.URL + "/tarefas/" + _id,
+              headers: {
+                authorization: localStorage.getItem("token")
+              }
+            };
+            _this4.request(opcoes, function (err, res, data) {
+              if (err || res.status === 412) {
+                _this4.emit("remove-error", err);
+              } else {
+                _this4.emit("remove");
+              }
+            });
+          }
+        });
+      }
+    }
+  }]);
+
+  return Tarefas;
+}(_ntask2.default);
+
+module.exports = Tarefas;
+
+},{"../ntask.js":10,"../templates/tarefas.js":15}],9:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _ntask = require("../ntask.js");
+
+var _ntask2 = _interopRequireDefault(_ntask);
+
+var _usuario = require("../templates/usuario.js");
+
+var _usuario2 = _interopRequireDefault(_usuario);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Usuario = function (_NTask) {
+  _inherits(Usuario, _NTask);
+
+  function Usuario(body) {
+    _classCallCheck(this, Usuario);
+
+    var _this = _possibleConstructorReturn(this, (Usuario.__proto__ || Object.getPrototypeOf(Usuario)).call(this));
+
+    _this.body = body;
+    return _this;
+  }
+
+  _createClass(Usuario, [{
+    key: "render",
+    value: function render() {
+      this.renderUsuarioDados();
+    }
+  }, {
+    key: "addEventListener",
+    value: function addEventListener() {
+      this.usuarioCancelarClick();
+    }
+  }, {
+    key: "renderUsuarioDados",
+    value: function renderUsuarioDados() {
+      var _this2 = this;
+
+      var opcoes = {
+        method: "GET",
+        url: this.URL + "/usuario",
+        json: true,
+        headers: {
+          authorization: localStorage.getItem("token")
+        }
+      };
+      this.request(opcoes, function (err, res, data) {
+        if (err || res.status === 412) {
+          _this2.emit("error", err);
+        } else {
+          _this2.body.innerHTML = _usuario2.default.render(data);
+          _this2.addEventListener();
+        }
+      });
+    }
+  }, {
+    key: "usuarioCancelarClick",
+    value: function usuarioCancelarClick() {
+      var _this3 = this;
+
+      var button = this.body.querySelector("[data-remove-conta]");
+
+      button.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (confirm("Tem certeza que deseja excluír sua conta?")) {
+          var opcoes = {
+            method: "DELETE",
+            url: _this3.URL + "/usuario",
+            headers: {
+              authorization: localStorage.getItem("token")
+            }
+          };
+          _this3.request(opcoes, function (err, res, data) {
+            if (err || res.status === 412) {
+              _this3.emit("remove-error", err);
+            } else {
+              _this3.emit("remove-conta");
+            }
+          });
+        }
+      });
+    }
+  }]);
+
+  return Usuario;
+}(_ntask2.default);
+
+module.exports = Usuario;
+
+},{"../ntask.js":10,"../templates/usuario.js":16}],10:[function(require,module,exports){
 "use strict";
 
 var _tinyEmitter = require("tiny-emitter");
@@ -850,21 +1348,64 @@ var NTask = function (_TinyEmitter) {
 
 module.exports = NTask;
 
-},{"browser-request":1,"tiny-emitter":2}],7:[function(require,module,exports){
+},{"browser-request":1,"tiny-emitter":2}],11:[function(require,module,exports){
 "use strict";
 
 exports.render = function () {
   return "<form>\n    <div class=\"list\">\n      <label class=\"item item-input item-stacked-label\">\n        <span class=\"input-label\">Nome</span>\n        <input type=\"text\" data-nome>\n      </label>\n      <label class=\"item item-input item-stacked-label\">\n        <span class=\"input-label\">E-mail</span>\n        <input type=\"text\" data-email>\n      </label>\n      <label class=\"item item-input item-stacked-label\">\n        <span class=\"input-label\">Senha</span>\n        <input type=\"password\" data-senha>\n      </label>\n    </div>\n    <div class=\"padding\">\n      <button class=\"button button-positive button-block\">\n        <i class=\"ion-thumbsup\"></i> Cadastrar\n      </button>\n    </div>\n  </form>";
 };
 
-},{}],8:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 exports.render = function () {
   return "<form>\n    <div class=\"list\">\n      <label class=\"item item-input item-stacked-label\">\n        <span class=\"input-label\">E-mail</span>\n        <input type=\"text\" data-email>\n      </label>\n      <label class=\"item item-input item-stacked-label\">\n        <span class=\"input-label\">Senha</span>\n        <input type=\"password\" data-senha>\n      </label>\n    </div>\n    <div class=\"padding\">\n      <button class=\"button button-positive button-block\">\n        <i class=\"ion-home\"></i> Entrar\n      </button>\n    </div>\n  </form>\n  <div class=\"padding\">\n    <button class=\"button button-block\" data-cadastrar>\n      <i class=\"ion-person-add\"></i> Cadastrar\n    </button>\n  </div>";
 };
 
-},{}],9:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
+"use strict";
+
+exports.render = function (path) {
+  var eTarefas = path === "tarefas" ? "active" : "";
+  var eTarefaForm = path === "tarefaForm" ? "active" : "";
+  var eUsuario = path === "usuario" ? "active" : "";
+
+  return "<div class=\"tabs-stripped tabs-color-calm\">\n    <div class=\"tabs\">\n      <a data-path=\"tarefas\" class=\"tab-item " + eTarefas + "\">\n        <i class=\"icon ion-home\"></i>\n      </a>\n      <a data-path=\"tarefaForm\" class=\"tab-item " + eTarefaForm + "\">\n        <i class=\"icon ion-compose\"></i>\n      </a>\n      <a data-path=\"usuario\" class=\"tab-item " + eUsuario + "\">\n        <i class=\"icon ion-person\"></i>\n      </a>\n      <a data-sair class=\"tab-item\">\n        <i class=\"icon ion-android-exit\"></i>\n      </a>\n    </div>\n  </div>";
+};
+
+},{}],14:[function(require,module,exports){
+"use strict";
+
+exports.render = function () {
+  return "<form>\n    <div class=\"list\">\n      <label class=\"item item-input item-stacked-label\">\n        <span class=\"input-label\">Tarefa</span>\n        <input type=\"text\" data-tarefa>\n      </label>\n    </div>\n    <div class=\"padding\">\n      <button class=\"button button-positive button-block\">\n        <i class=\"ion-compose\"></i> Salvar\n      </button>\n    </div>\n  </form>";
+};
+
+},{}],15:[function(require,module,exports){
+"use strict";
+
+var renderTarefas = function renderTarefas(tarefas) {
+  return tarefas.map(function (tarefa) {
+    var feito = tarefa.feito ? "ios-checkmark" : "ios-circle-outline";
+
+    return "<li class=\"item item-icon-left item-button-right\">\n      <i class=\"icon ion-" + feito + "\" data-feito data-tarefa-feito=\"" + (tarefa.feito ? 'feito' : '') + "\" data-tarefa-_id=\"" + tarefa._id + "\"></i> " + tarefa.titulo + "\n      <button data-remove data-tarefa-_id=\"" + tarefa._id + "\" class=\"button button-assertive\">\n        <i class=\"ion-trash-a\"></i>\n      </button>\n    </li>";
+  }).join("");
+};
+
+exports.render = function (tarefas) {
+  if (tarefas && tarefas.length) {
+    return "<ul class=\"list\">" + renderTarefas(tarefas) + "</ul>";
+  }
+  return "<h4 class=\"text-center\">Nenhuma tarefa ainda</h4>";
+};
+
+},{}],16:[function(require,module,exports){
+"use strict";
+
+exports.render = function (usuario) {
+  return "<div>\n    <label class=\"item item-input item-stacked-label\">\n      <span class=\"input-label\">Nome</span>\n      <small class=\"dark\">" + usuario.nome + "</small>\n    </label>\n    <label class=\"item item-input item-stacked-label\">\n      <span class=\"input-label\">E-mail</span>\n      <small class=\"dark\">" + usuario.email + "</smal>\n    </label>\n  </div>\n  <div class=\"padding\">\n    <button data-remove-conta class=\"button button-assertive button-block\">\n      <i class=\"ion-trash-a\"></i> Excluir conta\n    </button>\n  </div>";
+};
+
+},{}],17:[function(require,module,exports){
 "use strict";
 
 var _app = require("./app.js");
@@ -875,8 +1416,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 window.onload = function () {
   var main = document.querySelector("main");
+  var footer = document.querySelector("footer");
 
-  new _app2.default(main).init();
+  new _app2.default(main, footer).init();
 };
 
-},{"./app.js":3}]},{},[9]);
+},{"./app.js":3}]},{},[17]);

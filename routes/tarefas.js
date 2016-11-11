@@ -160,10 +160,7 @@ module.exports = app => {
 				.findById(req.user._id)
 				.select("_id tarefas")
 				.then(usuario => {
-					let tarefa = usuario.tarefas.id(req.params._id);
-					
-					tarefa.titulo = req.body.titulo;
-					tarefa.feito = req.body.feito;
+					usuario.tarefas.id(req.params._id).feito = req.body.feito;
 					usuario.save(() => {
 						res.sendStatus(204);
 					});

@@ -17,6 +17,7 @@ class Entrar extends NTask {
   }
   formSubmit() {
     const form = this.body.querySelector("form");
+    
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       
@@ -31,6 +32,7 @@ class Entrar extends NTask {
           senha: senha.value
         }
       };
+      
       this.request(opcoes, (err, res, data) => {
         if (err || res.status === 401) {
           this.emit("error", err);
